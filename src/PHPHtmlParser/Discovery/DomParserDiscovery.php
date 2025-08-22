@@ -17,7 +17,7 @@ class DomParserDiscovery
     public static function find(): ParserInterface
     {
         if (self::$parser == null) {
-            self::$parser = new Parser();
+            self::$parser = new Parser;
         }
 
         return self::$parser;

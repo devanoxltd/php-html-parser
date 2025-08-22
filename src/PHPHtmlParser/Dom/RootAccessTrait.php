@@ -21,11 +21,10 @@ trait RootAccessTrait
     /**
      * A simple wrapper around the root node.
      *
-     * @param string $name
+     * @param  string  $name
+     * @return mixed
      *
      * @throws NotLoadedException
-     *
-     * @return mixed
      */
     public function __get($name)
     {
@@ -33,6 +32,8 @@ trait RootAccessTrait
 
         return $this->root->$name;
     }
+
+    abstract public function isLoaded(): void;
 
     /**
      * Simple wrapper function that returns the first child.
@@ -95,6 +96,4 @@ trait RootAccessTrait
 
         return $this->root->hasChildren();
     }
-
-    abstract public function isLoaded(): void;
 }

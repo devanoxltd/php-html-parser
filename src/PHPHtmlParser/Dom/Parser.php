@@ -17,7 +17,14 @@ use PHPHtmlParser\Exceptions\ContentLengthException;
 use PHPHtmlParser\Exceptions\LogicalException;
 use PHPHtmlParser\Exceptions\StrictException;
 use PHPHtmlParser\Options;
-use stringEncode\Encode;
+use StringEncoder\Encoder;
+
+use function in_array;
+use function is_null;
+use function preg_match;
+use function strlen;
+use function strtolower;
+use function trim;
 
 class Parser implements ParserInterface
 {
@@ -46,9 +53,10 @@ class Parser implements ParserInterface
             }
             if ($str == '') {
                 $tagDTO = $this->parseTag($options, $content, $size);
-                if (!$tagDTO->isStatus()) {
+                if (! $tagDTO->isStatus()) {
                     // we are done here
                     $activeNode = null;
+
                     continue;
                 }
 
@@ -68,6 +76,7 @@ class Parser implements ParserInterface
                     if ($foundOpeningTag) {
                         $activeNode = $activeNode->getParent();
                     }
+
                     continue;
                 }
 
@@ -80,11 +89,11 @@ class Parser implements ParserInterface
                 $activeNode->addChild($node);
 
                 // check if node is self closing
-                if (!$node->getTag()->isSelfClosing()) {
+                if (! $node->getTag()->isSelfClosing()) {
                     $activeNode = $node;
                 }
             } elseif ($options->isWhitespaceTextNode() ||
-                \trim($str) != ''
+                trim($str) != ''
             ) {
                 // we found text we care about
                 $textNode = new TextNode($str, $options->isRemoveDoubleSpace());
@@ -104,15 +113,15 @@ class Parser implements ParserInterface
     public function detectCharset(Options $options, string $defaultCharset, AbstractNode $root): bool
     {
         // set the default
-        $encode = new Encode();
-        $encode->from($defaultCharset);
-        $encode->to($defaultCharset);
+        $encode = new Encoder;
+        $encode->setSourceEncoding($defaultCharset);
+        $encode->setTargetEncoding($defaultCharset);
 
         $enforceEncoding = $options->getEnforceEncoding();
         if ($enforceEncoding !== null) {
             //  they want to enforce the given encoding
-            $encode->from($enforceEncoding);
-            $encode->to($enforceEncoding);
+            $encode->setSourceEncoding($enforceEncoding);
+            $encode->setTargetEncoding($enforceEncoding);
 
             return false;
         }
@@ -120,7 +129,7 @@ class Parser implements ParserInterface
         /** @var AbstractNode $meta */
         $meta = $root->find('meta[http-equiv=Content-Type]', 0);
         if ($meta == null) {
-            if (!$this->detectHTML5Charset($encode, $root)) {
+            if (! $this->detectHTML5Charset($encode, $root)) {
                 // could not find meta tag
                 $root->propagateEncoding($encode);
 
@@ -130,15 +139,22 @@ class Parser implements ParserInterface
             return true;
         }
         $content = $meta->getAttribute('content');
-        if (\is_null($content)) {
+        if (is_null($content)) {
             // could not find content
             $root->propagateEncoding($encode);
 
             return false;
         }
         $matches = [];
-        if (\preg_match('/charset=([^;]+)/', $content, $matches)) {
-            $encode->from(\trim($matches[1]));
+        if (preg_match('/charset=([^;]+)/', $content, $matches)) {
+            $charset = trim($matches[1]);
+            // Normalize charset names
+            $charset = strtoupper($charset);
+            if ($charset === 'UTF-8') {
+                $charset = 'UTF-8';
+            }
+
+            $encode->setSourceEncoding($charset);
             $root->propagateEncoding($encode);
 
             return true;
@@ -183,7 +199,7 @@ class Parser implements ParserInterface
                 ->setOpening('<?')
                 ->setClosing(' ?>')
                 ->selfClosing();
-        } elseif($content->string(3) == '!--') {
+        } elseif ($content->string(3) == '!--') {
             // comment tag
             $tag = $content->fastForward(3)
                 ->copyByToken(StringToken::CLOSECOMMENT(), true);
@@ -192,8 +208,8 @@ class Parser implements ParserInterface
                 ->setClosing('-->')
                 ->selfClosing();
         } else {
-            $tag = \strtolower($content->copyByToken(StringToken::SLASH(), true));
-            if (\trim($tag) == '') {
+            $tag = strtolower($content->copyByToken(StringToken::SLASH(), true));
+            if (trim($tag) == '') {
                 // no tag found, invalid < found
                 return TagDTO::makeFromPrimitives();
             }
@@ -207,18 +223,18 @@ class Parser implements ParserInterface
             // self closing tag
             $node->getTag()->selfClosing();
             $content->fastForward(1);
-        } elseif (\in_array($node->getTag()->name(), $options->getSelfClosing(), true)) {
+        } elseif (in_array($node->getTag()->name(), $options->getSelfClosing(), true)) {
             // Should be a self closing tag, check if we are strict
             if ($options->isStrict()) {
                 $character = $content->getPosition();
-                throw new StrictException("Tag '" . $node->getTag()->name() . "' is not self closing! (character #$character)");
+                throw new StrictException("Tag '" . $node->getTag()->name() . "' is not self closing! (character #{$character})");
             }
 
             // We force self closing on this tag.
             $node->getTag()->selfClosing();
 
             // Should this tag use a trailing slash?
-            if (\in_array($node->getTag()->name(), $options->getNoSlash(), true)) {
+            if (in_array($node->getTag()->name(), $options->getNoSlash(), true)) {
                 $node->getTag()->noTrailingSlash();
             }
         }
@@ -233,7 +249,7 @@ class Parser implements ParserInterface
     /**
      * @throws ChildNotFoundException
      */
-    private function detectHTML5Charset(Encode $encode, AbstractNode $root): bool
+    private function detectHTML5Charset(Encoder $encode, AbstractNode $root): bool
     {
         /** @var AbstractNode|null $meta */
         $meta = $root->find('meta[charset]', 0);
@@ -241,7 +257,14 @@ class Parser implements ParserInterface
             return false;
         }
 
-        $encode->from(\trim($meta->getAttribute('charset')));
+        $charset = trim($meta->getAttribute('charset'));
+        // Normalize charset names
+        $charset = strtoupper($charset);
+        if ($charset === 'UTF-8') {
+            $charset = 'UTF-8';
+        }
+
+        $encode->setSourceEncoding($charset);
         $root->propagateEncoding($encode);
 
         return true;
@@ -260,16 +283,16 @@ class Parser implements ParserInterface
         $content->fastForward(1);
 
         // check if this closing tag counts
-        $tag = \strtolower($tag);
-        if (\in_array($tag, $options->getSelfClosing(), true)) {
+        $tag = strtolower($tag);
+        if (in_array($tag, $options->getSelfClosing(), true)) {
             return TagDTO::makeFromPrimitives(true);
         }
 
-        return TagDTO::makeFromPrimitives(true, true, null, \strtolower($tag));
+        return TagDTO::makeFromPrimitives(true, true, null, strtolower($tag));
     }
 
     /**
-     * @param string|Tag $tag
+     * @param  string|Tag  $tag
      *
      * @throws ContentLengthException
      * @throws LogicalException
@@ -289,6 +312,7 @@ class Parser implements ParserInterface
                     // reached the end of the content
                     break;
                 }
+
                 continue;
             }
 
@@ -299,6 +323,7 @@ class Parser implements ParserInterface
 
             if (empty($name)) {
                 $content->skipByToken(StringToken::BLANK());
+
                 continue;
             }
 
@@ -313,7 +338,7 @@ class Parser implements ParserInterface
                         do {
                             $moreString = $content->copyUntilUnless('"', '=>');
                             $string .= $moreString;
-                        } while (\strlen($moreString) > 0 && $content->getPosition() < $size);
+                        } while (strlen($moreString) > 0 && $content->getPosition() < $size);
                         $content->fastForward(1);
                         $node->getTag()->setAttribute($name, $string);
                         break;
@@ -323,7 +348,7 @@ class Parser implements ParserInterface
                         do {
                             $moreString = $content->copyUntilUnless("'", '=>');
                             $string .= $moreString;
-                        } while (\strlen($moreString) > 0 && $content->getPosition() < $size);
+                        } while (strlen($moreString) > 0 && $content->getPosition() < $size);
                         $content->fastForward(1);
                         $node->getTag()->setAttribute($name, $string, false);
                         break;
@@ -336,7 +361,7 @@ class Parser implements ParserInterface
                 if ($options->isStrict()) {
                     // can't have this in strict html
                     $character = $content->getPosition();
-                    throw new StrictException("Tag '$tag' has an attribute '$name' with out a value! (character #$character)");
+                    throw new StrictException("Tag '{$tag}' has an attribute '{$name}' with out a value! (character #{$character})");
                 }
                 $node->getTag()->setAttribute($name, null);
                 if ($content->char() != '>') {

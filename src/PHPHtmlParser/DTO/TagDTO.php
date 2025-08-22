@@ -36,13 +36,13 @@ final class TagDTO
         $this->tag = $values['tag'] ?? null;
     }
 
-    public static function makeFromPrimitives(bool $status = false, bool $closing = false, ?HtmlNode $node = null, ?string $tag = null): TagDTO
+    public static function makeFromPrimitives(bool $status = false, bool $closing = false, ?HtmlNode $node = null, ?string $tag = null): self
     {
-        return new TagDTO([
-            'status'  => $status,
+        return new self([
+            'status' => $status,
             'closing' => $closing,
-            'node'    => $node,
-            'tag'     => $tag,
+            'node' => $node,
+            'tag' => $tag,
         ]);
     }
 

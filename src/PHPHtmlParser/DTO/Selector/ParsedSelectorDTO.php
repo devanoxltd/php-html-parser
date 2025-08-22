@@ -12,7 +12,7 @@ final class ParsedSelectorDTO
     private $rules = [];
 
     /**
-     * @param RuleDTO[] $ruleDTOs
+     * @param  RuleDTO[]  $ruleDTOs
      */
     private function __construct(array $ruleDTOs)
     {
@@ -24,11 +24,11 @@ final class ParsedSelectorDTO
     }
 
     /**
-     * @param RuleDTO[] $ruleDTOs
+     * @param  RuleDTO[]  $ruleDTOs
      */
-    public static function makeFromRules(array $ruleDTOs): ParsedSelectorDTO
+    public static function makeFromRules(array $ruleDTOs): self
     {
-        return new ParsedSelectorDTO($ruleDTOs);
+        return new self($ruleDTOs);
     }
 
     /**

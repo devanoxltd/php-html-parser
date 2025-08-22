@@ -47,17 +47,17 @@ final class RuleDTO
     }
 
     /**
-     * @param string|array|null $key
-     * @param string|array|null $value
+     * @param  string|array|null  $key
+     * @param  string|array|null  $value
      */
-    public static function makeFromPrimitives(string $tag, string $operator, $key, $value, bool $noKey, bool $alterNext): RuleDTO
+    public static function makeFromPrimitives(string $tag, string $operator, $key, $value, bool $noKey, bool $alterNext): self
     {
-        return new RuleDTO([
-            'tag'       => $tag,
-            'operator'  => $operator,
-            'key'       => $key,
-            'value'     => $value,
-            'noKey'     => $noKey,
+        return new self([
+            'tag' => $tag,
+            'operator' => $operator,
+            'key' => $key,
+            'value' => $value,
+            'noKey' => $noKey,
             'alterNext' => $alterNext,
         ]);
     }

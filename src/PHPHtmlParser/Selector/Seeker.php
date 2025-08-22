@@ -11,6 +11,16 @@ use PHPHtmlParser\Dom\Node\LeafNode;
 use PHPHtmlParser\DTO\Selector\RuleDTO;
 use PHPHtmlParser\Exceptions\ChildNotFoundException;
 
+use function count;
+use function explode;
+use function is_array;
+use function is_null;
+use function is_numeric;
+use function is_string;
+use function preg_match;
+use function preg_quote;
+use function strtolower;
+
 class Seeker implements SeekerInterface
 {
     /**
@@ -24,14 +34,14 @@ class Seeker implements SeekerInterface
     public function seek(array $nodes, RuleDTO $rule, array $options): array
     {
         // XPath index
-        if ($rule->getTag() !== null && \is_numeric($rule->getKey())) {
+        if ($rule->getTag() !== null && is_numeric($rule->getKey())) {
             $count = 0;
             foreach ($nodes as $node) {
                 if ($rule->getTag() == '*'
                     || $rule->getTag() == $node->getTag()
                         ->name()
                 ) {
-                    ++$count;
+                    $count++;
                     if ($count == $rule->getKey()) {
                         // found the node we wanted
                         return [$node];
@@ -47,18 +57,19 @@ class Seeker implements SeekerInterface
         $return = [];
         foreach ($nodes as $node) {
             // check if we are a leaf
-            if ($node instanceof LeafNode || !$node->hasChildren()
+            if ($node instanceof LeafNode || ! $node->hasChildren()
             ) {
                 continue;
             }
 
             $children = [];
             $child = $node->firstChild();
-            while (!\is_null($child)) {
+            while (! is_null($child)) {
                 // wild card, grab all
-                if ($rule->getTag() == '*' && \is_null($rule->getKey())) {
+                if ($rule->getTag() == '*' && is_null($rule->getKey())) {
                     $return[] = $child;
                     $child = $this->getNextChild($node, $child);
+
                     continue;
                 }
 
@@ -81,7 +92,7 @@ class Seeker implements SeekerInterface
                 // this child failed to be matched
                 if ($child instanceof InnerNode && $child->hasChildren()
                 ) {
-                    if (!isset($options['checkGrandChildren'])
+                    if (! isset($options['checkGrandChildren'])
                         || $options['checkGrandChildren']
                     ) {
                         // we have a child that failed but are not leaves.
@@ -95,9 +106,9 @@ class Seeker implements SeekerInterface
                 $child = $this->getNextChild($node, $child);
             }
 
-            if ((!isset($options['checkGrandChildren'])
+            if ((! isset($options['checkGrandChildren'])
                     || $options['checkGrandChildren'])
-                && \count($children) > 0
+                && count($children) > 0
             ) {
                 // we have children that failed but are not leaves.
                 $matches = $this->seek($children, $rule, $options);
@@ -121,7 +132,7 @@ class Seeker implements SeekerInterface
             $result = $this->checkNodeValue($nodeValue, $rule, $node);
         } else {
             // normal search
-            if (!\is_array($rule->getKey())) {
+            if (! is_array($rule->getKey())) {
                 $nodeValue = $node->getAttribute($rule->getKey());
                 $result = $this->checkNodeValue($nodeValue, $rule, $node);
             } else {
@@ -183,7 +194,7 @@ class Seeker implements SeekerInterface
      */
     private function checkTag(RuleDTO $rule, AbstractNode $node): bool
     {
-        if (!empty($rule->getTag()) && $rule->getTag() != $node->getTag()->name()
+        if (! empty($rule->getTag()) && $rule->getTag() != $node->getTag()->name()
             && $rule->getTag() != '*'
         ) {
             return false;
@@ -197,14 +208,14 @@ class Seeker implements SeekerInterface
      */
     private function checkKey(RuleDTO $rule, AbstractNode $node): bool
     {
-        if (!\is_array($rule->getKey())) {
+        if (! is_array($rule->getKey())) {
             if ($rule->isNoKey()) {
                 if ($node->getAttribute($rule->getKey()) !== null) {
                     return false;
                 }
             } else {
                 if ($rule->getKey() != 'plaintext'
-                    && !$node->hasAttribute($rule->getKey())
+                    && ! $node->hasAttribute($rule->getKey())
                 ) {
                     return false;
                 }
@@ -212,14 +223,14 @@ class Seeker implements SeekerInterface
         } else {
             if ($rule->isNoKey()) {
                 foreach ($rule->getKey() as $key) {
-                    if (!\is_null($node->getAttribute($key))) {
+                    if (! is_null($node->getAttribute($key))) {
                         return false;
                     }
                 }
             } else {
                 foreach ($rule->getKey() as $key) {
                     if ($key != 'plaintext'
-                        && !$node->hasAttribute($key)
+                        && ! $node->hasAttribute($key)
                     ) {
                         return false;
                     }
@@ -239,7 +250,7 @@ class Seeker implements SeekerInterface
         $check = false;
         if (
             $rule->getValue() !== null &&
-            \is_string($rule->getValue()) &&
+            is_string($rule->getValue()) &&
             $nodeValue !== null
         ) {
             $check = $this->match($rule->getOperator(), $rule->getValue(), $nodeValue);
@@ -248,16 +259,16 @@ class Seeker implements SeekerInterface
         // handle multiple classes
         $key = $rule->getKey();
         if (
-            !$check &&
+            ! $check &&
             $key == 'class' &&
-            \is_array($rule->getValue())
+            is_array($rule->getValue())
         ) {
-            $nodeClasses = \explode(' ', $node->getAttribute('class') ?? '');
+            $nodeClasses = explode(' ', $node->getAttribute('class') ?? '');
             foreach ($rule->getValue() as $value) {
                 foreach ($nodeClasses as $class) {
                     if (
-                        !empty($class) &&
-                        \is_string($rule->getOperator())
+                        ! empty($class) &&
+                        is_string($rule->getOperator())
                     ) {
                         $check = $this->match($rule->getOperator(), $value, $class);
                     }
@@ -265,16 +276,16 @@ class Seeker implements SeekerInterface
                         break;
                     }
                 }
-                if (!$check) {
+                if (! $check) {
                     break;
                 }
             }
         } elseif (
-            !$check &&
-            \is_array($key) &&
-            !\is_null($nodeValue) &&
-            \is_string($rule->getOperator()) &&
-            \is_string($rule->getValue()[$index])
+            ! $check &&
+            is_array($key) &&
+            ! is_null($nodeValue) &&
+            is_string($rule->getOperator()) &&
+            is_string($rule->getValue()[$index])
         ) {
             $check = $this->match($rule->getOperator(), $rule->getValue()[$index], $nodeValue);
         }
@@ -290,25 +301,25 @@ class Seeker implements SeekerInterface
         string $pattern,
         string $value
     ): bool {
-        $value = \strtolower($value);
-        $pattern = \strtolower($pattern);
+        $value = strtolower($value);
+        $pattern = strtolower($pattern);
         switch ($operator) {
             case '=':
                 return $value === $pattern;
             case '!=':
                 return $value !== $pattern;
             case '^=':
-                return \preg_match('/^' . \preg_quote($pattern, '/') . '/',
-                        $value) == 1;
+                return preg_match('/^' . preg_quote($pattern, '/') . '/',
+                    $value) == 1;
             case '$=':
-                return \preg_match('/' . \preg_quote($pattern, '/') . '$/',
-                        $value) == 1;
+                return preg_match('/' . preg_quote($pattern, '/') . '$/',
+                    $value) == 1;
             case '*=':
                 if ($pattern[0] == '/') {
-                    return \preg_match($pattern, $value) == 1;
+                    return preg_match($pattern, $value) == 1;
                 }
 
-                return \preg_match('/' . $pattern . '/i', $value) == 1;
+                return preg_match('/' . $pattern . '/i', $value) == 1;
             default:
                 return false;
         }

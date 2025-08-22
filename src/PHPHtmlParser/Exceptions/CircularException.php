@@ -9,6 +9,4 @@ use Exception;
 /**
  * Class CircularException.
  */
-final class CircularException extends Exception
-{
-}
+final class CircularException extends Exception {}

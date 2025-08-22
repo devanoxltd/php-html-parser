@@ -17,7 +17,7 @@ class CleanerDiscovery
     public static function find(): CleanerInterface
     {
         if (self::$parser == null) {
-            self::$parser = new Cleaner();
+            self::$parser = new Cleaner;
         }
 
         return self::$parser;

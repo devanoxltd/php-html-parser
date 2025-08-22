@@ -8,6 +8,10 @@ use PHPHtmlParser\Dom\Tag;
 use PHPHtmlParser\Exceptions\ChildNotFoundException;
 use PHPHtmlParser\Exceptions\UnknownChildTypeException;
 
+use function get_class;
+use function is_null;
+use function strip_tags;
+
 /**
  * Class HtmlNode.
  *
@@ -59,11 +63,11 @@ class HtmlNode extends InnerNode
     /**
      * Sets up the tag of this node.
      *
-     * @param string|Tag $tag
+     * @param  string|Tag  $tag
      */
     public function __construct($tag)
     {
-        if (!$tag instanceof Tag) {
+        if (! $tag instanceof Tag) {
             $tag = new Tag($tag);
         }
         $this->tag = $tag;
@@ -71,7 +75,7 @@ class HtmlNode extends InnerNode
     }
 
     /**
-     * @param bool $htmlSpecialCharsDecode
+     * @param  bool  $htmlSpecialCharsDecode
      */
     public function setHtmlSpecialCharsDecode($htmlSpecialCharsDecode = false): void
     {
@@ -87,7 +91,7 @@ class HtmlNode extends InnerNode
      */
     public function innerHtml(): string
     {
-        if (!$this->hasChildren()) {
+        if (! $this->hasChildren()) {
             // no children
             return '';
         }
@@ -104,10 +108,13 @@ class HtmlNode extends InnerNode
         while ($child !== null) {
             if ($child instanceof TextNode) {
                 $string .= $child->text();
-            } elseif ($child instanceof HtmlNode) {
+            } elseif ($child instanceof self) {
+                $string .= $child->outerHtml();
+            } elseif ($child instanceof InnerNode) {
+                // Handle other InnerNode types (like MockNode for tests)
                 $string .= $child->outerHtml();
             } else {
-                throw new UnknownChildTypeException('Unknown child type "' . \get_class($child) . '" found in node');
+                throw new UnknownChildTypeException('Unknown child type "' . get_class($child) . '" found in node');
             }
 
             try {
@@ -133,8 +140,8 @@ class HtmlNode extends InnerNode
      */
     public function innerText(): string
     {
-        if (\is_null($this->innerText)) {
-            $this->innerText = \strip_tags($this->innerHtml());
+        if (is_null($this->innerText)) {
+            $this->innerText = strip_tags($this->innerHtml());
         }
 
         return $this->innerText;
@@ -202,7 +209,7 @@ class HtmlNode extends InnerNode
                 $text .= $child['node']->text;
             } elseif (
                 $lookInChildren &&
-                $node instanceof HtmlNode
+                $node instanceof self
             ) {
                 $text .= $node->text($lookInChildren);
             }

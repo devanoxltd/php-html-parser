@@ -8,73 +8,73 @@ use PHPUnit\Framework\TestCase;
 
 class CleanupTest extends TestCase
 {
-    public function testCleanupInputTrue()
+    public function test_cleanup_input_true()
     {
-        $dom = new Dom();
-        $dom->setOptions((new Options())->setCleanupInput(true));
+        $dom = new Dom;
+        $dom->setOptions((new Options)->setCleanupInput(true));
         $dom->loadFromFile('tests/data/files/big.html');
         $this->assertEquals(0, \count($dom->find('style')));
         $this->assertEquals(0, \count($dom->find('script')));
     }
 
-    public function testCleanupInputFalse()
+    public function test_cleanup_input_false()
     {
-        $dom = new Dom();
-        $dom->setOptions((new Options())->setCleanupInput(false));
+        $dom = new Dom;
+        $dom->setOptions((new Options)->setCleanupInput(false));
         $dom->loadFromFile('tests/data/files/big.html');
         $this->assertEquals(1, \count($dom->find('style')));
         $this->assertEquals(22, \count($dom->find('script')));
     }
 
-    public function testRemoveStylesTrue()
+    public function test_remove_styles_true()
     {
-        $dom = new Dom();
-        $dom->setOptions((new Options())->setRemoveStyles(true));
+        $dom = new Dom;
+        $dom->setOptions((new Options)->setRemoveStyles(true));
         $dom->loadFromFile('tests/data/files/big.html');
         $this->assertEquals(0, \count($dom->find('style')));
     }
 
-    public function testRemoveStylesFalse()
+    public function test_remove_styles_false()
     {
-        $dom = new Dom();
-        $dom->setOptions((new Options())->setRemoveStyles(false));
+        $dom = new Dom;
+        $dom->setOptions((new Options)->setRemoveStyles(false));
         $dom->loadFromFile('tests/data/files/big.html');
         $this->assertEquals(1, \count($dom->find('style')));
         $this->assertEquals('text/css',
             $dom->find('style')->getAttribute('type'));
     }
 
-    public function testRemoveScriptsTrue()
+    public function test_remove_scripts_true()
     {
-        $dom = new Dom();
-        $dom->setOptions((new Options())->setRemoveScripts(true));
+        $dom = new Dom;
+        $dom->setOptions((new Options)->setRemoveScripts(true));
         $dom->loadFromFile('tests/data/files/big.html');
         $this->assertEquals(0, \count($dom->find('script')));
     }
 
-    public function testRemoveScriptsFalse()
+    public function test_remove_scripts_false()
     {
-        $dom = new Dom();
-        $dom->setOptions((new Options())->setRemoveScripts(false));
+        $dom = new Dom;
+        $dom->setOptions((new Options)->setRemoveScripts(false));
         $dom->loadFromFile('tests/data/files/big.html');
         $this->assertEquals(22, \count($dom->find('script')));
         $this->assertEquals('text/javascript',
             $dom->find('script')->getAttribute('type'));
     }
 
-    public function testSmartyScripts()
+    public function test_smarty_scripts()
     {
-        $dom = new Dom();
+        $dom = new Dom;
         $dom->loadStr('
         aa={123}
         ');
         $this->assertEquals(' aa= ', $dom->innerHtml);
     }
 
-    public function testSmartyScriptsDisabled()
+    public function test_smarty_scripts_disabled()
     {
-        $dom = new Dom();
-        $dom->setOptions((new Options())->setRemoveSmartyScripts(false));
+        $dom = new Dom;
+        $dom->setOptions((new Options)->setRemoveSmartyScripts(false));
         $dom->loadStr('
         aa={123}
         ');

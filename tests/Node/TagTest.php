@@ -5,20 +5,20 @@ declare(strict_types=1);
 use PHPHtmlParser\Dom\Tag;
 use PHPUnit\Framework\TestCase;
 
-class NodeTagTest extends TestCase
+class TagTest extends TestCase
 {
-    public function testSelfClosing()
+    public function test_self_closing()
     {
         $tag = new Tag('a');
         $tag->selfClosing();
         $this->assertTrue($tag->isSelfClosing());
     }
 
-    public function testSetAttributes()
+    public function test_set_attributes()
     {
         $attr = [
             'href' => [
-                'value'       => 'http://google.com',
+                'value' => 'http://google.com',
                 'doubleQuote' => false,
             ],
         ];
@@ -28,18 +28,17 @@ class NodeTagTest extends TestCase
         $this->assertEquals('http://google.com', $tag->getAttribute('href')->getValue());
     }
 
-    /**
-     * @expectedException \PHPHtmlParser\Exceptions\Tag\AttributeNotFoundException
-     */
-    public function testRemoveAttribute()
+    public function test_remove_attribute()
     {
+        $this->expectException(PHPHtmlParser\Exceptions\Tag\AttributeNotFoundException::class);
+
         $tag = new Tag('a');
         $tag->setAttribute('href', 'http://google.com');
         $tag->removeAttribute('href');
         $tag->getAttribute('href');
     }
 
-    public function testRemoveAllAttributes()
+    public function test_remove_all_attributes()
     {
         $tag = new Tag('a');
         $tag->setAttribute('href', 'http://google.com');
@@ -48,17 +47,17 @@ class NodeTagTest extends TestCase
         $this->assertEquals(0, \count($tag->getAttributes()));
     }
 
-    public function testSetAttributeNoArray()
+    public function test_set_attribute_no_array()
     {
         $tag = new Tag('a');
         $tag->setAttribute('href', 'http://google.com');
         $this->assertEquals('http://google.com', $tag->getAttribute('href')->getValue());
     }
 
-    public function testSetAttributesNoDoubleArray()
+    public function test_set_attributes_no_double_array()
     {
         $attr = [
-            'href'  => 'http://google.com',
+            'href' => 'http://google.com',
             'class' => 'funtimes',
         ];
 
@@ -67,16 +66,16 @@ class NodeTagTest extends TestCase
         $this->assertEquals('funtimes', $tag->getAttribute('class')->getValue());
     }
 
-    public function testUpdateAttributes()
+    public function test_update_attributes()
     {
         $tag = new Tag('a');
         $tag->setAttributes([
             'href' => [
-                'value'       => 'http://google.com',
+                'value' => 'http://google.com',
                 'doubleQuote' => false,
             ],
             'class' => [
-                'value'       => null,
+                'value' => null,
                 'doubleQuote' => true,
             ],
         ]);
@@ -85,7 +84,7 @@ class NodeTagTest extends TestCase
         $this->assertEquals('http://google.com', $tag->getAttribute('href')->getValue());
 
         $attr = [
-            'href'  => 'https://www.google.com',
+            'href' => 'https://www.google.com',
             'class' => 'funtimes',
         ];
 
@@ -94,17 +93,17 @@ class NodeTagTest extends TestCase
         $this->assertEquals('https://www.google.com', $tag->getAttribute('href')->getValue());
     }
 
-    public function testNoise()
+    public function test_noise()
     {
         $tag = new Tag('a');
         $this->assertTrue($tag->noise('noise') instanceof Tag);
     }
 
-    public function testGetAttributeMagic()
+    public function test_get_attribute_magic()
     {
         $attr = [
             'href' => [
-                'value'       => 'http://google.com',
+                'value' => 'http://google.com',
                 'doubleQuote' => false,
             ],
         ];
@@ -114,18 +113,18 @@ class NodeTagTest extends TestCase
         $this->assertEquals('http://google.com', $tag->getAttribute('href')->getValue());
     }
 
-    public function testSetAttributeMagic()
+    public function test_set_attribute_magic()
     {
         $tag = new Tag('a');
         $tag->setAttribute('href', 'http://google.com');
         $this->assertEquals('http://google.com', $tag->getAttribute('href')->getValue());
     }
 
-    public function testMakeOpeningTag()
+    public function test_make_opening_tag()
     {
         $attr = [
             'href' => [
-                'value'       => 'http://google.com',
+                'value' => 'http://google.com',
                 'doubleQuote' => true,
             ],
         ];
@@ -135,11 +134,11 @@ class NodeTagTest extends TestCase
         $this->assertEquals('<a href="http://google.com">', $tag->makeOpeningTag());
     }
 
-    public function testMakeOpeningTagEmptyAttr()
+    public function test_make_opening_tag_empty_attr()
     {
         $attr = [
             'href' => [
-                'value'       => 'http://google.com',
+                'value' => 'http://google.com',
                 'doubleQuote' => true,
             ],
         ];
@@ -150,11 +149,11 @@ class NodeTagTest extends TestCase
         $this->assertEquals('<a href="http://google.com" selected>', $tag->makeOpeningTag());
     }
 
-    public function testMakeOpeningTagSelfClosing()
+    public function test_make_opening_tag_self_closing()
     {
         $attr = [
             'class' => [
-                'value'       => 'clear-fix',
+                'value' => 'clear-fix',
                 'doubleQuote' => true,
             ],
         ];
@@ -165,30 +164,30 @@ class NodeTagTest extends TestCase
         $this->assertEquals('<div class="clear-fix" />', $tag->makeOpeningTag());
     }
 
-    public function testMakeClosingTag()
+    public function test_make_closing_tag()
     {
         $tag = new Tag('a');
         $this->assertEquals('</a>', $tag->makeClosingTag());
     }
 
-    public function testMakeClosingTagSelfClosing()
+    public function test_make_closing_tag_self_closing()
     {
         $tag = new Tag('div');
         $tag->selfClosing();
         $this->assertEmpty($tag->makeClosingTag());
     }
 
-    public function testSetTagAttribute()
+    public function test_set_tag_attribute()
     {
         $tag = new Tag('div');
         $tag->setStyleAttributeValue('display', 'none');
         $this->assertEquals('display:none;', $tag->getAttribute('style')->getValue());
     }
 
-    public function testGetStyleAttributesArray()
+    public function test_get_style_attributes_array()
     {
         $tag = new Tag('div');
         $tag->setStyleAttributeValue('display', 'none');
-        $this->assertInternalType('array', $tag->getStyleAttributeArray());
+        $this->assertIsArray($tag->getStyleAttributeArray());
     }
 }

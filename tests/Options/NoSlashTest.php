@@ -8,20 +8,20 @@ use PHPUnit\Framework\TestCase;
 
 class NoSlashTest extends TestCase
 {
-    public function testLoadClosingTagOnSelfClosingNoSlash()
+    public function test_load_closing_tag_on_self_closing_no_slash()
     {
-        $dom = new Dom();
-        $dom->setOptions((new Options())->addNoSlashTag('br'));
+        $dom = new Dom;
+        $dom->setOptions((new Options)->addNoSlashTag('br'));
 
         $dom->loadStr('<div class="all"><br><p>Hey bro, <a href="google.com" data-quote="\"">click here</a></br></div>');
         $this->assertEquals('<br><p>Hey bro, <a href="google.com" data-quote="\"">click here</a></p>', $dom->find('div', 0)->innerHtml);
     }
 
-    public function testLoadClosingTagOnSelfClosingRemoveNoSlash()
+    public function test_load_closing_tag_on_self_closing_remove_no_slash()
     {
-        $dom = new Dom();
+        $dom = new Dom;
         $dom->setOptions(
-            (new Options())
+            (new Options)
                 ->addNoSlashTag('br')
                 ->removeNoSlashTag('br')
         );
@@ -30,11 +30,11 @@ class NoSlashTest extends TestCase
         $this->assertEquals('<br /><p>Hey bro, <a href="google.com" data-quote="\"">click here</a></p>', $dom->find('div', 0)->innerHtml);
     }
 
-    public function testLoadClosingTagOnSelfClosingClearNoSlash()
+    public function test_load_closing_tag_on_self_closing_clear_no_slash()
     {
-        $dom = new Dom();
+        $dom = new Dom;
         $dom->setOptions(
-            (new Options())
+            (new Options)
                 ->addNoSlashTag('br')
                 ->clearNoSlashTags()
         );

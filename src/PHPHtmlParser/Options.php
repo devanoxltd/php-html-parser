@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace PHPHtmlParser;
 
+use function array_diff;
+
 class Options
 {
     /**
@@ -125,7 +127,7 @@ class Options
         return $this->whitespaceTextNode;
     }
 
-    public function setWhitespaceTextNode(bool $whitespaceTextNode): Options
+    public function setWhitespaceTextNode(bool $whitespaceTextNode): self
     {
         $this->whitespaceTextNode = $whitespaceTextNode;
 
@@ -137,7 +139,7 @@ class Options
         return $this->strict;
     }
 
-    public function setStrict(bool $strict): Options
+    public function setStrict(bool $strict): self
     {
         $this->strict = $strict;
 
@@ -149,7 +151,7 @@ class Options
         return $this->enforceEncoding;
     }
 
-    public function setEnforceEncoding(?string $enforceEncoding): Options
+    public function setEnforceEncoding(?string $enforceEncoding): self
     {
         $this->enforceEncoding = $enforceEncoding;
 
@@ -161,7 +163,7 @@ class Options
         return $this->cleanupInput;
     }
 
-    public function setCleanupInput(bool $cleanupInput): Options
+    public function setCleanupInput(bool $cleanupInput): self
     {
         $this->cleanupInput = $cleanupInput;
 
@@ -173,7 +175,7 @@ class Options
         return $this->removeScripts;
     }
 
-    public function setRemoveScripts(bool $removeScripts): Options
+    public function setRemoveScripts(bool $removeScripts): self
     {
         $this->removeScripts = $removeScripts;
 
@@ -185,7 +187,7 @@ class Options
         return $this->removeStyles;
     }
 
-    public function setRemoveStyles(bool $removeStyles): Options
+    public function setRemoveStyles(bool $removeStyles): self
     {
         $this->removeStyles = $removeStyles;
 
@@ -197,7 +199,7 @@ class Options
         return $this->preserveLineBreaks;
     }
 
-    public function setPreserveLineBreaks(bool $preserveLineBreaks): Options
+    public function setPreserveLineBreaks(bool $preserveLineBreaks): self
     {
         $this->preserveLineBreaks = $preserveLineBreaks;
 
@@ -209,7 +211,7 @@ class Options
         return $this->removeDoubleSpace;
     }
 
-    public function setRemoveDoubleSpace(bool $removeDoubleSpace): Options
+    public function setRemoveDoubleSpace(bool $removeDoubleSpace): self
     {
         $this->removeDoubleSpace = $removeDoubleSpace;
 
@@ -221,7 +223,7 @@ class Options
         return $this->removeSmartyScripts;
     }
 
-    public function setRemoveSmartyScripts(bool $removeSmartyScripts): Options
+    public function setRemoveSmartyScripts(bool $removeSmartyScripts): self
     {
         $this->removeSmartyScripts = $removeSmartyScripts;
 
@@ -233,7 +235,7 @@ class Options
         return $this->htmlSpecialCharsDecode;
     }
 
-    public function setHtmlSpecialCharsDecode(bool $htmlSpecialCharsDecode): Options
+    public function setHtmlSpecialCharsDecode(bool $htmlSpecialCharsDecode): self
     {
         $this->htmlSpecialCharsDecode = $htmlSpecialCharsDecode;
 
@@ -248,7 +250,7 @@ class Options
         return $this->selfClosing;
     }
 
-    public function setSelfClosing(array $selfClosing): Options
+    public function setSelfClosing(array $selfClosing): self
     {
         $this->selfClosing = $selfClosing;
 
@@ -258,7 +260,7 @@ class Options
     /**
      * Adds the tag to the list of tags that will always be self closing.
      */
-    public function addSelfClosingTag(string $tag): Options
+    public function addSelfClosingTag(string $tag): self
     {
         $this->selfClosing[] = $tag;
 
@@ -268,9 +270,9 @@ class Options
     /**
      * Adds the tags to the list of tags that will always be self closing.
      *
-     * @param string[] $tags
+     * @param  string[]  $tags
      */
-    public function addSelfClosingTags(array $tags): Options
+    public function addSelfClosingTags(array $tags): self
     {
         foreach ($tags as $tag) {
             $this->selfClosing[] = $tag;
@@ -282,10 +284,10 @@ class Options
     /**
      * Removes the tag from the list of tags that will always be self closing.
      */
-    public function removeSelfClosingTag(string $tag): Options
+    public function removeSelfClosingTag(string $tag): self
     {
         $tags = [$tag];
-        $this->selfClosing = \array_diff($this->selfClosing, $tags);
+        $this->selfClosing = array_diff($this->selfClosing, $tags);
 
         return clone $this;
     }
@@ -293,7 +295,7 @@ class Options
     /**
      * Sets the list of self closing tags to empty.
      */
-    public function clearSelfClosingTags(): Options
+    public function clearSelfClosingTags(): self
     {
         $this->selfClosing = [];
 
@@ -309,9 +311,9 @@ class Options
     }
 
     /**
-     * @param string[] $noSlash
+     * @param  string[]  $noSlash
      */
-    public function setNoSlash(array $noSlash): Options
+    public function setNoSlash(array $noSlash): self
     {
         $this->noSlash = $noSlash;
 
@@ -321,7 +323,7 @@ class Options
     /**
      * Adds a tag to the list of self closing tags that should not have a trailing slash.
      */
-    public function addNoSlashTag(string $tag): Options
+    public function addNoSlashTag(string $tag): self
     {
         $this->noSlash[] = $tag;
 
@@ -331,10 +333,10 @@ class Options
     /**
      * Removes a tag from the list of no-slash tags.
      */
-    public function removeNoSlashTag(string $tag): Options
+    public function removeNoSlashTag(string $tag): self
     {
         $tags = [$tag];
-        $this->noSlash = \array_diff($this->noSlash, $tags);
+        $this->noSlash = array_diff($this->noSlash, $tags);
 
         return clone $this;
     }
@@ -342,14 +344,14 @@ class Options
     /**
      * Empties the list of no-slash tags.
      */
-    public function clearNoSlashTags(): Options
+    public function clearNoSlashTags(): self
     {
         $this->noSlash = [];
 
         return clone $this;
     }
 
-    public function setFromOptions(Options $options): Options
+    public function setFromOptions(self $options): self
     {
         return $this->setCleanupInput($options->isCleanupInput())
             ->setEnforceEncoding($options->getEnforceEncoding())

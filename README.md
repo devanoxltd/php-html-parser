@@ -1,10 +1,6 @@
 PHP Html Parser
 ==========================
 
-[![Build Status](https://travis-ci.org/paquettg/php-html-parser.png)](https://travis-ci.org/paquettg/php-html-parser)
-[![Coverage Status](https://coveralls.io/repos/paquettg/php-html-parser/badge.png)](https://coveralls.io/r/paquettg/php-html-parser)
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/paquettg/php-html-parser/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/paquettg/php-html-parser/?branch=master)
-
 PHPHtmlParser is a simple, flexible, html parser which allows you to select tags using any css selector, like jQuery. The goal is to assist in the development of tools which require a quick, easy way to scrap html, whether it's valid or not!
 
 Install
@@ -13,10 +9,10 @@ Install
 Install the latest version using composer.
 
 ```bash
-$ composer require paquettg/php-html-parser
+$ composer require devanoxltd/php-html-parser
 ```
 
-This package can be found on [packagist](https://packagist.org/packages/paquettg/php-html-parser) and is best loaded using [composer](http://getcomposer.org/). We support php 7.2, 7.3, and 7.4.
+This package can be found on [packagist](https://packagist.org/packages/devanoxltd/php-html-parser) and is best loaded using [composer](http://getcomposer.org/). We support php 7.2, 7.3, and 7.4.
 
 Basic Usage
 -----
@@ -35,13 +31,6 @@ echo $a->text; // "click here"
 ```
 
 The above will output "click here". Simple, no? There are many ways to get the same result from the DOM, such as `$dom->getElementsbyTag('a')[0]` or `$dom->find('a', 0)`, which can all be found in the tests or in the code itself.
-
-Support PHP Html Parser Financially
---------------
-
-Get supported Monolog and help fund the project with the [Tidelift Subscription](https://tidelift.com/subscription/pkg/packagist-paquettg-php-html-parser?utm_source=packagist-paquettg-php-html-parser&utm_medium=referral&utm_campaign=enterprise).
-
-Tidelift delivers commercial support and maintenance for the open source dependencies you use to build your applications. Save time, reduce risk, and improve code health, while paying the maintainers of the exact dependencies you use.
 
 Loading Files
 ------------------
@@ -62,7 +51,7 @@ foreach ($contents as $content)
 {
 	// get the class attr
 	$class = $content->getAttribute('class');
-	
+
 	// do something with the html
 	$html = $content->innerHtml;
 
@@ -77,7 +66,7 @@ This example loads the html from big.html, a real page found online, and gets al
 Loading URLs
 ----------------
 
-Loading a URL is very similar to the way you would load the HTML from a file. 
+Loading a URL is very similar to the way you would load the HTML from a file.
 
 ```php
 // Assuming you installed from Composer:
@@ -141,7 +130,7 @@ $dom->setOptions(
         ->setStrict(true)
 );
 
-$dom->loadFromUrl('http://google.com', 
+$dom->loadFromUrl('http://google.com',
     (new Options())->setWhitespaceTextNode(false) // only applies to this load.
 );
 
@@ -160,7 +149,7 @@ The whitespaceTextNode, by default true, option tells the parser to save textnod
 
 **enforceEncoding**
 
-The enforceEncoding, by default null, option will enforce an character set to be used for reading the content and returning the content in that encoding. Setting it to null will trigger an attempt to figure out the encoding from within the content of the string given instead. 
+The enforceEncoding, by default null, option will enforce an character set to be used for reading the content and returning the content in that encoding. Setting it to null will trigger an attempt to figure out the encoding from within the content of the string given instead.
 
 **cleanupInput**
 
@@ -268,3 +257,6 @@ $a   = $dom->find('a')[0];
 $a->firstChild()->setText('biz baz');
 echo $dom; // '<div class="all"><p>Hey bro, <a href="google.com">biz baz</a><br /> :)</p></div>'
 ```
+
+### Credit
+This is forked from [paquettg/php-html-parser](https://github.com/paquettg/php-html-parser).

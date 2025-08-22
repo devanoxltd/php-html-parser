@@ -7,6 +7,11 @@ namespace PHPHtmlParser\Dom\Node;
 use PHPHtmlParser\Dom\Tag;
 use PHPHtmlParser\Exceptions\LogicalException;
 
+use function htmlspecialchars_decode;
+use function is_null;
+use function mb_ereg_replace;
+use function str_replace;
+
 /**
  * Class TextNode.
  *
@@ -43,13 +48,13 @@ class TextNode extends LeafNode
     /**
      * Sets the text for this node.
      *
-     * @param bool $removeDoubleSpace
+     * @param  bool  $removeDoubleSpace
      */
     public function __construct(string $text, $removeDoubleSpace = true)
     {
         if ($removeDoubleSpace) {
             // remove double spaces
-            $replacedText = \mb_ereg_replace('\s+', ' ', $text);
+            $replacedText = mb_ereg_replace('\s+', ' ', $text);
             if ($replacedText === false) {
                 throw new LogicalException('mb_ereg_replace returns false when attempting to clean white space from "' . $text . '".');
             }
@@ -57,7 +62,7 @@ class TextNode extends LeafNode
         }
 
         // restore line breaks
-        $text = \str_replace('&#10;', "\n", $text);
+        $text = str_replace('&#10;', "\n", $text);
 
         $this->text = $text;
         $this->tag = new Tag('text');
@@ -65,7 +70,7 @@ class TextNode extends LeafNode
     }
 
     /**
-     * @param bool $htmlSpecialCharsDecode
+     * @param  bool  $htmlSpecialCharsDecode
      */
     public function setHtmlSpecialCharsDecode($htmlSpecialCharsDecode = false): void
     {
@@ -79,17 +84,17 @@ class TextNode extends LeafNode
     public function text(): string
     {
         if ($this->htmlSpecialCharsDecode) {
-            $text = \htmlspecialchars_decode($this->text);
+            $text = htmlspecialchars_decode($this->text);
         } else {
             $text = $this->text;
         }
         // convert charset
-        if (!\is_null($this->encode)) {
-            if (!\is_null($this->convertedText)) {
+        if (! is_null($this->encode)) {
+            if (! is_null($this->convertedText)) {
                 // we already know the converted value
                 return $this->convertedText;
             }
-            $text = $this->encode->convert($text);
+            $text = $this->encode->convert()->fromString($text)->toString();
 
             // remember the conversion
             $this->convertedText = $text;
@@ -108,8 +113,8 @@ class TextNode extends LeafNode
     public function setText(string $text): void
     {
         $this->text = $text;
-        if (!\is_null($this->encode)) {
-            $text = $this->encode->convert($text);
+        if (! is_null($this->encode)) {
+            $text = $this->encode->convert()->fromString($text)->toString();
 
             // remember the conversion
             $this->convertedText = $text;

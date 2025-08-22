@@ -9,6 +9,4 @@ use Exception;
 /**
  * Class UnknownOptionException.
  */
-final class UnknownOptionException extends Exception
-{
-}
+final class UnknownOptionException extends Exception {}

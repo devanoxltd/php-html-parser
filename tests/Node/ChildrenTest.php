@@ -6,111 +6,107 @@ require_once 'tests/data/MockNode.php';
 use PHPHtmlParser\Dom\Node\MockNode as Node;
 use PHPUnit\Framework\TestCase;
 
-class NodeChildTest extends TestCase
+class ChildrenTest extends TestCase
 {
-    public function testGetParent()
+    public function test_get_parent()
     {
-        $parent = new Node();
-        $child = new Node();
+        $parent = new Node;
+        $child = new Node;
         $child->setParent($parent);
         $this->assertEquals($parent->id(), $child->getParent()->id());
     }
 
-    public function testSetParentTwice()
+    public function test_set_parent_twice()
     {
-        $parent = new Node();
-        $parent2 = new Node();
-        $child = new Node();
+        $parent = new Node;
+        $parent2 = new Node;
+        $child = new Node;
         $child->setParent($parent);
         $child->setParent($parent2);
         $this->assertEquals($parent2->id(), $child->getParent()->id());
     }
 
-    public function testNextSibling()
+    public function test_next_sibling()
     {
-        $parent = new Node();
-        $child = new Node();
-        $child2 = new Node();
+        $parent = new Node;
+        $child = new Node;
+        $child2 = new Node;
         $child->setParent($parent);
         $child2->setParent($parent);
         $this->assertEquals($child2->id(), $child->nextSibling()->id());
     }
 
-    /**
-     * @expectedException \PHPHtmlParser\Exceptions\ChildNotFoundException
-     */
-    public function testNextSiblingNotFound()
+    public function test_next_sibling_not_found()
     {
-        $parent = new Node();
-        $child = new Node();
+        $this->expectException(PHPHtmlParser\Exceptions\ChildNotFoundException::class);
+
+        $parent = new Node;
+        $child = new Node;
         $child->setParent($parent);
         $child->nextSibling();
     }
 
-    /**
-     * @expectedException \PHPHtmlParser\Exceptions\ParentNotFoundException
-     */
-    public function testNextSiblingNoParent()
+    public function test_next_sibling_no_parent()
     {
-        $child = new Node();
+        $this->expectException(PHPHtmlParser\Exceptions\ParentNotFoundException::class);
+
+        $child = new Node;
         $child->nextSibling();
     }
 
-    public function testPreviousSibling()
+    public function test_previous_sibling()
     {
-        $parent = new Node();
-        $child = new Node();
-        $child2 = new Node();
+        $parent = new Node;
+        $child = new Node;
+        $child2 = new Node;
         $child->setParent($parent);
         $child2->setParent($parent);
         $this->assertEquals($child->id(), $child2->previousSibling()->id());
     }
 
-    /**
-     * @expectedException \PHPHtmlParser\Exceptions\ChildNotFoundException
-     */
-    public function testPreviousSiblingNotFound()
+    public function test_previous_sibling_not_found()
     {
-        $parent = new Node();
-        $node = new Node();
+        $this->expectException(PHPHtmlParser\Exceptions\ChildNotFoundException::class);
+
+        $parent = new Node;
+        $node = new Node;
         $node->setParent($parent);
         $node->previousSibling();
     }
 
-    /**
-     * @expectedException \PHPHtmlParser\Exceptions\ParentNotFoundException
-     */
-    public function testPreviousSiblingNoParent()
+    public function test_previous_sibling_no_parent()
     {
-        $child = new Node();
+        $this->expectException(PHPHtmlParser\Exceptions\ParentNotFoundException::class);
+
+        $child = new Node;
         $child->previousSibling();
     }
 
-    public function testGetChildren()
+    public function test_get_children()
     {
-        $parent = new Node();
-        $child = new Node();
-        $child2 = new Node();
+        $parent = new Node;
+        $child = new Node;
+        $child2 = new Node;
         $child->setParent($parent);
         $child2->setParent($parent);
         $this->assertEquals($child->id(), $parent->getChildren()[0]->id());
     }
 
-    public function testCountChildren()
+    public function test_count_children()
     {
-        $parent = new Node();
-        $child = new Node();
-        $child2 = new Node();
+        $parent = new Node;
+        $child = new Node;
+        $child2 = new Node;
         $child->setParent($parent);
         $child2->setParent($parent);
         $this->assertEquals(2, $parent->countChildren());
     }
 
-    public function testIsChild()
+    public function test_is_child()
     {
-        $parent = new Node();
-        $child1 = new Node();
-        $child2 = new Node();
+        $parent = new Node;
+        $child1 = new Node;
+        $child2 = new Node;
 
         $child1->setParent($parent);
         $child2->setParent($child1);

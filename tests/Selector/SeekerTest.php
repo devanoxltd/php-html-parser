@@ -8,7 +8,7 @@ use PHPUnit\Framework\TestCase;
 
 class SeekerTest extends TestCase
 {
-    public function testSeekReturnEmptyArray()
+    public function test_seek_return_empty_array()
     {
         $ruleDTO = RuleDTO::makeFromPrimitives(
             'tag',
@@ -18,7 +18,7 @@ class SeekerTest extends TestCase
             false,
             false
         );
-        $seeker = new Seeker();
+        $seeker = new Seeker;
         $results = $seeker->seek([], $ruleDTO, []);
         $this->assertCount(0, $results);
     }

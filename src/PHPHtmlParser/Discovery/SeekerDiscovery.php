@@ -17,7 +17,7 @@ class SeekerDiscovery
     public static function find(): SeekerInterface
     {
         if (self::$seeker == null) {
-            self::$seeker = new Seeker();
+            self::$seeker = new Seeker;
         }
 
         return self::$seeker;

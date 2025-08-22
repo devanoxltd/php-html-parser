@@ -7,68 +7,67 @@ use PHPUnit\Framework\TestCase;
 
 class StaticDomTest extends TestCase
 {
-    public function setUp()
+    protected function setUp(): void
     {
         StaticDom::mount();
     }
 
-    public function tearDown()
+    protected function tearDown(): void
     {
         StaticDom::unload();
     }
 
-    public function testMountWithDom()
+    public function test_mount_with_dom()
     {
-        $dom = new PHPHtmlParser\Dom();
+        $dom = new PHPHtmlParser\Dom;
         StaticDom::unload();
         $status = StaticDom::mount('newDom', $dom);
         $this->assertTrue($status);
     }
 
-    public function testloadStr()
+    public function testload_str()
     {
         $dom = Dom::loadStr('<div class="all"><p>Hey bro, <a href="google.com">click here</a><br /> :)</p></div>');
         $div = $dom->find('div', 0);
         $this->assertEquals('<div class="all"><p>Hey bro, <a href="google.com">click here</a><br /> :)</p></div>', $div->outerHtml);
     }
 
-    public function testLoadWithFile()
+    public function test_load_with_file()
     {
         $dom = Dom::loadFromFile('tests/data/files/small.html');
         $this->assertEquals('VonBurgermeister', $dom->find('.post-user font', 0)->text);
     }
 
-    public function testLoadFromFile()
+    public function test_load_from_file()
     {
         $dom = Dom::loadFromFile('tests/data/files/small.html');
         $this->assertEquals('VonBurgermeister', $dom->find('.post-user font', 0)->text);
     }
 
-    /**
-     * @expectedException \PHPHtmlParser\Exceptions\NotLoadedException
-     */
-    public function testFindNoloadStr()
+    public function test_find_noload_str()
     {
+        $this->expectException(PHPHtmlParser\Exceptions\NotLoadedException::class);
+
         Dom::find('.post-user font', 0);
     }
 
-    public function testFindI()
+    public function test_find_i()
     {
         Dom::loadFromFile('tests/data/files/big.html');
         $this->assertEquals('В кустах блестит металл<br /> И искрится ток<br /> Человечеству конец', Dom::find('i')[1]->innerHtml);
     }
 
-    public function testLoadFromUrl()
+    public function test_load_from_url()
     {
-        $streamMock = Mockery::mock(\Psr\Http\Message\StreamInterface::class);
+        $streamMock = Mockery::mock(Psr\Http\Message\StreamInterface::class);
         $streamMock->shouldReceive('getContents')
             ->once()
             ->andReturn(\file_get_contents('tests/data/files/small.html'));
-        $responseMock = Mockery::mock(\Psr\Http\Message\ResponseInterface::class);
+        $responseMock = Mockery::mock(Psr\Http\Message\ResponseInterface::class);
         $responseMock->shouldReceive('getBody')
             ->once()
             ->andReturn($streamMock);
-        $clientMock = Mockery::mock(\Psr\Http\Client\ClientInterface::class);
+        $clientMock = Mockery::mock(Psr\Http\Client\ClientInterface::class);
         $clientMock->shouldReceive('sendRequest')
             ->once()
             ->andReturn($responseMock);

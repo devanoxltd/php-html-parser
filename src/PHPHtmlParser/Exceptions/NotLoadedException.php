@@ -9,6 +9,4 @@ use Exception;
 /**
  * Class NotLoadedException.
  */
-final class NotLoadedException extends Exception
-{
-}
+final class NotLoadedException extends Exception {}

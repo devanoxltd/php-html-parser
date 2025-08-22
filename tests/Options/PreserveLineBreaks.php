@@ -8,10 +8,10 @@ use PHPUnit\Framework\TestCase;
 
 class PreserveLineBreaks extends TestCase
 {
-    public function testPreserveLineBreakTrue()
+    public function test_preserve_line_break_true()
     {
-        $dom = new Dom();
-        $dom->setOptions((new Options())->setPreserveLineBreaks(true));
+        $dom = new Dom;
+        $dom->setOptions((new Options)->setPreserveLineBreaks(true));
 
         $dom->loadStr('<div class="stream-container ">
 <div class="stream-item js-new-items-bar-container"> </div> <div class="stream">');
@@ -19,10 +19,10 @@ class PreserveLineBreaks extends TestCase
         $this->assertEquals("<div class=\"stream-container \">\n<div class=\"stream-item js-new-items-bar-container\"> </div> <div class=\"stream\"></div></div>", (string) $dom);
     }
 
-    public function testPreserveLineBreakBeforeClosingTag()
+    public function test_preserve_line_break_before_closing_tag()
     {
-        $dom = new Dom();
-        $dom->setOptions((new Options())->setPreserveLineBreaks(true));
+        $dom = new Dom;
+        $dom->setOptions((new Options)->setPreserveLineBreaks(true));
         $dom->loadStr('<div class="stream-container "
  ><div class="stream-item js-new-items-bar-container"> </div> <div class="stream">');
 

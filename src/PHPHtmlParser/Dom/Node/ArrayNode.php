@@ -9,6 +9,8 @@ use Countable;
 use IteratorAggregate;
 use PHPHtmlParser\Dom\Tag;
 
+use function count;
+
 /**
  * Dom node object which will allow users to use it as
  * an array.
@@ -20,8 +22,13 @@ use PHPHtmlParser\Dom\Tag;
  * @property-read Tag       $tag
  * @property-read InnerNode $parent
  */
-abstract class ArrayNode extends AbstractNode implements IteratorAggregate, Countable
+abstract class ArrayNode extends AbstractNode implements Countable, IteratorAggregate
 {
+    /**
+     * Returns the array to be used the the iterator.
+     */
+    abstract protected function getIteratorArray(): array;
+
     /**
      * Gets the iterator.
      */
@@ -35,11 +42,6 @@ abstract class ArrayNode extends AbstractNode implements IteratorAggregate, Coun
      */
     public function count(): int
     {
-        return \count($this->getIteratorArray());
+        return count($this->getIteratorArray());
     }
-
-    /**
-     * Returns the array to be used the the iterator.
-     */
-    abstract protected function getIteratorArray(): array;
 }

@@ -12,7 +12,7 @@ final class ParsedSelectorCollectionDTO
     private $parsedSelectorDTO = [];
 
     /**
-     * @param ParsedSelectorDTO[] $parsedSelectorDTOs
+     * @param  ParsedSelectorDTO[]  $parsedSelectorDTOs
      */
     private function __construct(array $parsedSelectorDTOs)
     {
@@ -24,11 +24,11 @@ final class ParsedSelectorCollectionDTO
     }
 
     /**
-     * @param ParsedSelectorDTO[] $parsedSelectorDTOs
+     * @param  ParsedSelectorDTO[]  $parsedSelectorDTOs
      */
-    public static function makeCollection(array $parsedSelectorDTOs): ParsedSelectorCollectionDTO
+    public static function makeCollection(array $parsedSelectorDTOs): self
     {
-        return new ParsedSelectorCollectionDTO($parsedSelectorDTOs);
+        return new self($parsedSelectorDTOs);
     }
 
     /**

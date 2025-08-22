@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace PHPHtmlParser;
 
-use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Client;
+use GuzzleHttp\Psr7\Request;
 use PHPHtmlParser\Contracts\Dom\CleanerInterface;
 use PHPHtmlParser\Contracts\Dom\ParserInterface;
 use PHPHtmlParser\Contracts\DomInterface;
@@ -22,6 +22,10 @@ use PHPHtmlParser\Exceptions\UnknownChildTypeException;
 use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestInterface;
+
+use function file_get_contents;
+use function is_null;
+use function strlen;
 
 /**
  * Class Dom.
@@ -96,9 +100,9 @@ class Dom implements DomInterface
      * @throws LogicalException
      * @throws StrictException
      */
-    public function loadFromFile(string $file, ?Options $options = null): Dom
+    public function loadFromFile(string $file, ?Options $options = null): self
     {
-        $content = @\file_get_contents($file);
+        $content = @file_get_contents($file);
         if ($content === false) {
             throw new LogicalException('file_get_contents failed and returned false when trying to read "' . $file . '".');
         }
@@ -117,10 +121,10 @@ class Dom implements DomInterface
      * @throws StrictException
      * @throws ClientExceptionInterface
      */
-    public function loadFromUrl(string $url, ?Options $options = null, ?ClientInterface $client = null, ?RequestInterface $request = null): Dom
+    public function loadFromUrl(string $url, ?Options $options = null, ?ClientInterface $client = null, ?RequestInterface $request = null): self
     {
         if ($client === null) {
-            $client = new Client();
+            $client = new Client;
         }
         if ($request === null) {
             $request = new Request('GET', $url);
@@ -142,9 +146,9 @@ class Dom implements DomInterface
      * @throws LogicalException
      * @throws StrictException
      */
-    public function loadStr(string $str, ?Options $options = null): Dom
+    public function loadStr(string $str, ?Options $options = null): self
     {
-        $localOptions = new Options();
+        $localOptions = new Options;
         if ($this->globalOptions !== null) {
             $localOptions = $localOptions->setFromOptions($this->globalOptions);
         }
@@ -156,7 +160,7 @@ class Dom implements DomInterface
 
         $this->content = new Content($html);
 
-        $this->root = $this->domParser->parse($localOptions, $this->content, \strlen($str));
+        $this->root = $this->domParser->parse($localOptions, $this->content, strlen($str));
         $this->domParser->detectCharset($localOptions, $this->defaultCharset, $this->root);
 
         return $this;
@@ -165,7 +169,7 @@ class Dom implements DomInterface
     /**
      * Sets a global options array to be used by all load calls.
      */
-    public function setOptions(Options $options): Dom
+    public function setOptions(Options $options): self
     {
         $this->globalOptions = $options;
 
@@ -175,12 +179,13 @@ class Dom implements DomInterface
     /**
      * Find elements by css selector on the root node.
      *
-     * @throws NotLoadedException
-     * @throws ChildNotFoundException
      *
      * @return mixed|Collection|null
+     *
+     * @throws NotLoadedException
+     * @throws ChildNotFoundException
      */
-    public function find(string $selector, int $nth = null)
+    public function find(string $selector, ?int $nth = null)
     {
         $this->isLoaded();
 
@@ -191,12 +196,12 @@ class Dom implements DomInterface
      * Simple wrapper function that returns an element by the
      * id.
      *
-     * @param $id
+     *
+     *
+     * @return mixed|Collection|null
      *
      * @throws NotLoadedException
      * @throws ChildNotFoundException
-     *
-     * @return mixed|Collection|null
      */
     public function getElementById($id)
     {
@@ -209,10 +214,11 @@ class Dom implements DomInterface
      * Simple wrapper function that returns all elements by
      * tag name.
      *
-     * @throws NotLoadedException
-     * @throws ChildNotFoundException
      *
      * @return mixed|Collection|null
+     *
+     * @throws NotLoadedException
+     * @throws ChildNotFoundException
      */
     public function getElementsByTag(string $name)
     {
@@ -225,10 +231,11 @@ class Dom implements DomInterface
      * Simple wrapper function that returns all elements by
      * class name.
      *
-     * @throws NotLoadedException
-     * @throws ChildNotFoundException
      *
      * @return mixed|Collection|null
+     *
+     * @throws NotLoadedException
+     * @throws ChildNotFoundException
      */
     public function getElementsByClass(string $class)
     {
@@ -244,7 +251,7 @@ class Dom implements DomInterface
      */
     private function isLoaded(): void
     {
-        if (\is_null($this->content)) {
+        if (is_null($this->content)) {
             throw new NotLoadedException('Content is not loaded!');
         }
     }

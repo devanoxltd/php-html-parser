@@ -9,6 +9,4 @@ use Exception;
 /**
  * Class ParentNotFoundException.
  */
-final class ParentNotFoundException extends Exception
-{
-}
+final class ParentNotFoundException extends Exception {}

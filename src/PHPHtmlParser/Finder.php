@@ -18,8 +18,6 @@ class Finder
 
     /**
      * Finder constructor.
-     *
-     * @param $id
      */
     public function __construct($id)
     {
@@ -29,14 +27,15 @@ class Finder
     /**
      * Find node in tree by id.
      *
-     * @throws ChildNotFoundException
-     * @throws ParentNotFoundException
      *
      * @return bool|AbstractNode
+     *
+     * @throws ChildNotFoundException
+     * @throws ParentNotFoundException
      */
     public function find(AbstractNode $node)
     {
-        if (!$node->id() && $node instanceof InnerNode) {
+        if (! $node->id() && $node instanceof InnerNode) {
             return $this->find($node->firstChild());
         }
 
@@ -55,7 +54,7 @@ class Finder
             if ($nextSibling->id() < $this->id) {
                 return $this->find($nextSibling);
             }
-        } elseif (!$node->isTextNode() && $node instanceof InnerNode) {
+        } elseif (! $node->isTextNode() && $node instanceof InnerNode) {
             return $this->find($node->firstChild());
         }
 

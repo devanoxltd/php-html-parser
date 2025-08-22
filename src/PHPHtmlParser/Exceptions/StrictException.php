@@ -9,6 +9,4 @@ use Exception;
 /**
  * Class StrictException.
  */
-final class StrictException extends Exception
-{
-}
+final class StrictException extends Exception {}

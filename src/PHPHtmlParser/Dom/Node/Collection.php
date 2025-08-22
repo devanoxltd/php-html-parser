@@ -10,10 +10,15 @@ use Countable;
 use IteratorAggregate;
 use PHPHtmlParser\Exceptions\EmptyCollectionException;
 
+use function call_user_func_array;
+use function count;
+use function is_null;
+use function reset;
+
 /**
  * Class Collection.
  */
-class Collection implements IteratorAggregate, ArrayAccess, Countable
+class Collection implements ArrayAccess, Countable, IteratorAggregate
 {
     /**
      * The collection of Nodes.
@@ -26,15 +31,16 @@ class Collection implements IteratorAggregate, ArrayAccess, Countable
      * Attempts to call the method on the first node in
      * the collection.
      *
-     * @throws EmptyCollectionException
      *
      * @return mixed
+     *
+     * @throws EmptyCollectionException
      */
     public function __call(string $method, array $arguments)
     {
-        $node = \reset($this->collection);
+        $node = reset($this->collection);
         if ($node instanceof AbstractNode) {
-            return \call_user_func_array([$node, $method], $arguments);
+            return call_user_func_array([$node, $method], $arguments);
         }
         throw new EmptyCollectionException('The collection does not contain any Nodes.');
     }
@@ -43,15 +49,14 @@ class Collection implements IteratorAggregate, ArrayAccess, Countable
      * Attempts to apply the magic get to the first node
      * in the collection.
      *
-     * @param mixed $key
+     * @param  mixed  $key
+     * @return mixed
      *
      * @throws EmptyCollectionException
-     *
-     * @return mixed
      */
     public function __get($key)
     {
-        $node = \reset($this->collection);
+        $node = reset($this->collection);
         if ($node instanceof AbstractNode) {
             return $node->$key;
         }
@@ -64,7 +69,7 @@ class Collection implements IteratorAggregate, ArrayAccess, Countable
      */
     public function __toString(): string
     {
-        $node = \reset($this->collection);
+        $node = reset($this->collection);
         if ($node instanceof AbstractNode) {
             return (string) $node;
         }
@@ -77,7 +82,7 @@ class Collection implements IteratorAggregate, ArrayAccess, Countable
      */
     public function count(): int
     {
-        return \count($this->collection);
+        return count($this->collection);
     }
 
     /**
@@ -91,12 +96,12 @@ class Collection implements IteratorAggregate, ArrayAccess, Countable
     /**
      * Set an attribute by the given offset.
      *
-     * @param mixed $offset
-     * @param mixed $value
+     * @param  mixed  $offset
+     * @param  mixed  $value
      */
     public function offsetSet($offset, $value): void
     {
-        if (\is_null($offset)) {
+        if (is_null($offset)) {
             $this->collection[] = $value;
         } else {
             $this->collection[$offset] = $value;
@@ -106,7 +111,7 @@ class Collection implements IteratorAggregate, ArrayAccess, Countable
     /**
      * Checks if an offset exists.
      *
-     * @param mixed $offset
+     * @param  mixed  $offset
      */
     public function offsetExists($offset): bool
     {
@@ -116,7 +121,7 @@ class Collection implements IteratorAggregate, ArrayAccess, Countable
     /**
      * Unset a collection Node.
      *
-     * @param mixed $offset
+     * @param  mixed  $offset
      */
     public function offsetUnset($offset): void
     {
@@ -126,8 +131,7 @@ class Collection implements IteratorAggregate, ArrayAccess, Countable
     /**
      * Gets a node at the given offset, or null.
      *
-     * @param mixed $offset
-     *
+     * @param  mixed  $offset
      * @return mixed
      */
     public function offsetGet($offset)

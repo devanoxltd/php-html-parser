@@ -16,6 +16,4 @@ use PHPHtmlParser\Dom\Tag;
  * @property-read Tag       $tag
  * @property-read InnerNode $parent
  */
-abstract class LeafNode extends AbstractNode
-{
-}
+abstract class LeafNode extends AbstractNode {}

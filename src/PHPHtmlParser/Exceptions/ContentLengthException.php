@@ -9,6 +9,4 @@ use Exception;
 /**
  * Class EmptyCollectionException.
  */
-final class ContentLengthException extends Exception
-{
-}
+final class ContentLengthException extends Exception {}

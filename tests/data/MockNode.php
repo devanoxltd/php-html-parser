@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace PHPHtmlParser\Dom\Node;
 
+use function is_null;
+
 /**
  * This mock object is used solely for testing the abstract
  * class Node with out any potential side effects caused
@@ -13,6 +15,12 @@ namespace PHPHtmlParser\Dom\Node;
  */
 class MockNode extends InnerNode
 {
+    public ?int $prev = null;
+    public ?int $next = null;
+    protected ?string $innerHtml = null;
+    protected ?string $outerHtml = null;
+    protected ?string $text = null;
+
     /**
      * Mock of innner html.
      */
@@ -45,7 +53,7 @@ class MockNode extends InnerNode
         $this->innerHtml = null;
         $this->outerHtml = null;
         $this->text = null;
-        if (\is_null($this->parent) === false) {
+        if (is_null($this->parent) === false) {
             $this->parent->clear();
         }
     }

@@ -4,8 +4,11 @@ declare(strict_types=1);
 
 namespace PHPHtmlParser\DTO\Tag;
 
-use stringEncode\Encode;
 use stringEncode\Exception;
+use StringEncoder\Encoder;
+
+use function htmlspecialchars_decode;
+use function is_null;
 
 final class AttributeDTO
 {
@@ -25,10 +28,10 @@ final class AttributeDTO
         $this->doubleQuote = $values['doubleQuote'] ?? true;
     }
 
-    public static function makeFromPrimitives(?string $value, bool $doubleQuote = true): AttributeDTO
+    public static function makeFromPrimitives(?string $value, bool $doubleQuote = true): self
     {
-        return new AttributeDTO([
-            'value'       => $value,
+        return new self([
+            'value' => $value,
             'doubleQuote' => $doubleQuote,
         ]);
     }
@@ -45,16 +48,18 @@ final class AttributeDTO
 
     public function htmlspecialcharsDecode(): void
     {
-        if (!\is_null($this->value)) {
-            $this->value = \htmlspecialchars_decode($this->value);
+        if (! is_null($this->value)) {
+            $this->value = htmlspecialchars_decode($this->value);
         }
     }
 
     /**
      * @throws Exception
      */
-    public function encodeValue(Encode $encode)
+    public function encodeValue(Encoder $encode)
     {
-        $this->value = $encode->convert($this->value);
+        if ($this->value !== null) {
+            $this->value = $encode->convert()->fromString($this->value)->toString();
+        }
     }
 }
