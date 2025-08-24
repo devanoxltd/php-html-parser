@@ -9,8 +9,6 @@ use Countable;
 use IteratorAggregate;
 use PHPHtmlParser\Dom\Tag;
 
-use function count;
-
 /**
  * Dom node object which will allow users to use it as
  * an array.

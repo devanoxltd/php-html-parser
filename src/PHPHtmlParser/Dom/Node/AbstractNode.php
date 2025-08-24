@@ -14,10 +14,6 @@ use PHPHtmlParser\Finder;
 use PHPHtmlParser\Selector\Selector;
 use StringEncoder\Contracts\EncoderInterface;
 
-use function is_null;
-use function is_string;
-use function strtolower;
-
 /**
  * Dom node object.
  *

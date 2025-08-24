@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace PHPHtmlParser;
 
-use function array_diff;
-
 class Options
 {
     /**

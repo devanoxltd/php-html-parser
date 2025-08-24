@@ -13,11 +13,6 @@ use PHPHtmlParser\Exceptions\StrictException;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestInterface;
 
-use function call_user_func_array;
-use function class_alias;
-use function class_exists;
-use function is_null;
-
 /**
  * Class StaticDom.
  */

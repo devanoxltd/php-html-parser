@@ -10,14 +10,6 @@ use StringEncoder\Contracts\EncoderInterface;
 use StringEncoder\Exceptions\InvalidEncodingException;
 use TypeError;
 
-use function array_keys;
-use function explode;
-use function is_array;
-use function is_null;
-use function strtolower;
-use function substr;
-use function trim;
-
 /**
  * Class Tag.
  */

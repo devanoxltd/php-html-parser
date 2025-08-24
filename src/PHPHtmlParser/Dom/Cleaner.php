@@ -8,13 +8,6 @@ use PHPHtmlParser\Contracts\Dom\CleanerInterface;
 use PHPHtmlParser\Exceptions\LogicalException;
 use PHPHtmlParser\Options;
 
-use function gzdecode;
-use function mb_convert_encoding;
-use function mb_eregi_replace;
-use function mb_regex_encoding;
-use function mb_strpos;
-use function str_replace;
-
 class Cleaner implements CleanerInterface
 {
     /**

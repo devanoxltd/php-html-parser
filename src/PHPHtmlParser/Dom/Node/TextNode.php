@@ -7,11 +7,6 @@ namespace PHPHtmlParser\Dom\Node;
 use PHPHtmlParser\Dom\Tag;
 use PHPHtmlParser\Exceptions\LogicalException;
 
-use function htmlspecialchars_decode;
-use function is_null;
-use function mb_ereg_replace;
-use function str_replace;
-
 /**
  * Class TextNode.
  *

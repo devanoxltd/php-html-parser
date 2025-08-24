@@ -10,19 +10,6 @@ use PHPHtmlParser\Exceptions\CircularException;
 use PHPHtmlParser\Exceptions\LogicalException;
 use StringEncoder\Contracts\EncoderInterface;
 
-use function array_combine;
-use function array_keys;
-use function array_search;
-use function array_splice;
-use function array_values;
-use function count;
-use function end;
-use function in_array;
-use function is_int;
-use function is_null;
-use function key;
-use function reset;
-
 /**
  * Inner node of the html tree, might have children.
  *
@@ -94,7 +81,7 @@ abstract class InnerNode extends ArrayNode
                 $childrenIds[] = $child->id;
                 $child = $this->nextChild($child->id());
                 if (in_array($child->id, $childrenIds, true)) {
-                     throw new CircularException('Circular sibling reference found on child with id ' . $child->id() . ' found twice.');
+                    throw new CircularException('Circular sibling reference found on child with id ' . $child->id() . ' found twice.');
                 }
             } while (true);
         } catch (ChildNotFoundException $e) {

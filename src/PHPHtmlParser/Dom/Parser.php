@@ -17,15 +17,8 @@ use PHPHtmlParser\Exceptions\ContentLengthException;
 use PHPHtmlParser\Exceptions\LogicalException;
 use PHPHtmlParser\Exceptions\StrictException;
 use PHPHtmlParser\Options;
-use StringEncoder\Encoder;
 use StringEncoder\Contracts\EncoderInterface;
-
-use function in_array;
-use function is_null;
-use function preg_match;
-use function strlen;
-use function strtolower;
-use function trim;
+use StringEncoder\Encoder;
 
 class Parser implements ParserInterface
 {

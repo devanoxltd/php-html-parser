@@ -8,10 +8,6 @@ use PHPHtmlParser\Dom\Tag;
 use PHPHtmlParser\Exceptions\ChildNotFoundException;
 use PHPHtmlParser\Exceptions\UnknownChildTypeException;
 
-use function get_class;
-use function is_null;
-use function strip_tags;
-
 /**
  * Class HtmlNode.
  *

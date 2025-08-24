@@ -11,11 +11,6 @@ use IteratorAggregate;
 use PHPHtmlParser\Exceptions\EmptyCollectionException;
 use ReturnTypeWillChange;
 
-use function call_user_func_array;
-use function count;
-use function is_null;
-use function reset;
-
 /**
  * Class Collection.
  */

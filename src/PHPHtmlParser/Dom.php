@@ -23,10 +23,6 @@ use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestInterface;
 
-use function file_get_contents;
-use function is_null;
-use function strlen;
-
 /**
  * Class Dom.
  */

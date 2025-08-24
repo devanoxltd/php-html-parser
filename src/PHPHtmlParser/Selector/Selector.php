@@ -15,8 +15,6 @@ use PHPHtmlParser\DTO\Selector\ParsedSelectorCollectionDTO;
 use PHPHtmlParser\DTO\Selector\RuleDTO;
 use PHPHtmlParser\Exceptions\ChildNotFoundException;
 
-use function count;
-
 /**
  * Class Selector.
  */

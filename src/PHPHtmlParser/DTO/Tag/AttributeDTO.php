@@ -7,9 +7,6 @@ namespace PHPHtmlParser\DTO\Tag;
 use StringEncoder\Contracts\EncoderInterface;
 use StringEncoder\Exceptions\InvalidEncodingException;
 
-use function htmlspecialchars_decode;
-use function is_null;
-
 final class AttributeDTO
 {
     /**

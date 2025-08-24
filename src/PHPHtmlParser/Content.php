@@ -8,12 +8,6 @@ use PHPHtmlParser\Enum\StringToken;
 use PHPHtmlParser\Exceptions\ContentLengthException;
 use PHPHtmlParser\Exceptions\LogicalException;
 
-use function strcspn;
-use function strlen;
-use function strpos;
-use function strspn;
-use function substr;
-
 /**
  * Class Content.
  */

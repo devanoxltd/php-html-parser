@@ -11,16 +11,6 @@ use PHPHtmlParser\Dom\Node\LeafNode;
 use PHPHtmlParser\DTO\Selector\RuleDTO;
 use PHPHtmlParser\Exceptions\ChildNotFoundException;
 
-use function count;
-use function explode;
-use function is_array;
-use function is_null;
-use function is_numeric;
-use function is_string;
-use function preg_match;
-use function preg_quote;
-use function strtolower;
-
 class Seeker implements SeekerInterface
 {
     /**

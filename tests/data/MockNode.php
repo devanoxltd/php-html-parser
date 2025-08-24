@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace PHPHtmlParser\Dom\Node;
 
-use function is_null;
-
 /**
  * This mock object is used solely for testing the abstract
  * class Node with out any potential side effects caused

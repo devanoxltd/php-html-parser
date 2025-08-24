@@ -9,15 +9,6 @@ use PHPHtmlParser\DTO\Selector\ParsedSelectorCollectionDTO;
 use PHPHtmlParser\DTO\Selector\ParsedSelectorDTO;
 use PHPHtmlParser\DTO\Selector\RuleDTO;
 
-use function count;
-use function explode;
-use function is_string;
-use function preg_match_all;
-use function strpos;
-use function strtolower;
-use function substr;
-use function trim;
-
 /**
  * This is the default parser for the selector.
  */
