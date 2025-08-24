@@ -146,9 +146,6 @@ class Parser implements ParserInterface
             $charset = trim($matches[1]);
             // Normalize charset names
             $charset = strtoupper($charset);
-            if ($charset === 'UTF-8') {
-                $charset = 'UTF-8';
-            }
 
             $encode->setSourceEncoding($charset);
             $root->propagateEncoding($encode);
@@ -256,9 +253,6 @@ class Parser implements ParserInterface
         $charset = trim($meta->getAttribute('charset'));
         // Normalize charset names
         $charset = strtoupper($charset);
-        if ($charset === 'UTF-8') {
-            $charset = 'UTF-8';
-        }
 
         $encode->setSourceEncoding($charset);
         $root->propagateEncoding($encode);
