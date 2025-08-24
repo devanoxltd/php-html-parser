@@ -45,7 +45,7 @@ class Parser implements ParserInterface
         $activeNode = $root;
         while ($activeNode !== null) {
             if (
-                $activeNode && is_object($activeNode->tag) && $activeNode->tag->name() === 'script'
+                $activeNode && is_object($activeNode->tag) && $activeNode->getTag()->name() === 'script'
                 && $options->isCleanupInput() !== true
             ) {
                 $str = $content->copyUntil('</');
