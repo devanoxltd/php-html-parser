@@ -18,6 +18,7 @@ use PHPHtmlParser\Exceptions\LogicalException;
 use PHPHtmlParser\Exceptions\StrictException;
 use PHPHtmlParser\Options;
 use StringEncoder\Encoder;
+use StringEncoder\Contracts\EncoderInterface;
 
 use function in_array;
 use function is_null;
@@ -251,7 +252,7 @@ class Parser implements ParserInterface
     /**
      * @throws ChildNotFoundException
      */
-    private function detectHTML5Charset(Encoder $encode, AbstractNode $root): bool
+    private function detectHTML5Charset(EncoderInterface $encode, AbstractNode $root): bool
     {
         /** @var AbstractNode|null $meta */
         $meta = $root->find('meta[charset]', 0);

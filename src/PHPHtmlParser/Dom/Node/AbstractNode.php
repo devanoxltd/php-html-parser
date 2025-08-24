@@ -12,7 +12,7 @@ use PHPHtmlParser\Exceptions\ParentNotFoundException;
 use PHPHtmlParser\Exceptions\Tag\AttributeNotFoundException;
 use PHPHtmlParser\Finder;
 use PHPHtmlParser\Selector\Selector;
-use StringEncoder\Encoder;
+use StringEncoder\Contracts\EncoderInterface;
 
 use function is_null;
 use function is_string;
@@ -61,7 +61,7 @@ abstract class AbstractNode
     /**
      * The encoding class used to encode strings.
      *
-     * @var mixed
+     * @var EncoderInterface|null
      */
     protected $encode;
 
@@ -230,7 +230,7 @@ abstract class AbstractNode
      *
      * @return void
      */
-    public function propagateEncoding(Encoder $encode)
+    public function propagateEncoding(EncoderInterface $encode)
     {
         $this->encode = $encode;
         $this->tag->setEncoding($encode);
