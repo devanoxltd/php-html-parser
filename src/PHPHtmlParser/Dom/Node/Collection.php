@@ -132,7 +132,6 @@ class Collection implements ArrayAccess, Countable, IteratorAggregate
      * Gets a node at the given offset, or null.
      *
      * @param  mixed  $offset
-     * @return mixed
      */
     public function offsetGet($offset): mixed
     {

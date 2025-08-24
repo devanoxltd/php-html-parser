@@ -33,6 +33,26 @@
             "Tests\\": "tests/"
        	}
     },
+
+    "scripts": {
+        "php-version": [
+            "@php -v"
+        ],
+        "pest": [
+            "pest"
+        ],
+        "test": [
+            "@php-version",
+            "@pest"
+        ],
+        "lint": [
+            "@php-version",
+            "pint --parallel -v --test"
+        ],
+        "fix":  [
+            "pint --parallel --repair"
+        ]
+    },
     "config": {
         "allow-plugins": {
             "pestphp/pest-plugin": true
