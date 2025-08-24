@@ -44,7 +44,8 @@ class Parser implements ParserInterface
         $root->setHtmlSpecialCharsDecode($options->isHtmlSpecialCharsDecode());
         $activeNode = $root;
         while ($activeNode !== null) {
-            if ($activeNode && $activeNode->tag->name() === 'script'
+            if (
+                $activeNode && is_object($activeNode->tag) && $activeNode->tag->name() === 'script'
                 && $options->isCleanupInput() !== true
             ) {
                 $str = $content->copyUntil('</');
@@ -92,7 +93,8 @@ class Parser implements ParserInterface
                 if (! $node->getTag()->isSelfClosing()) {
                     $activeNode = $node;
                 }
-            } elseif ($options->isWhitespaceTextNode() ||
+            } elseif (
+                $options->isWhitespaceTextNode() ||
                 trim($str) != ''
             ) {
                 // we found text we care about
