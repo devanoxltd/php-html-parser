@@ -9,6 +9,7 @@ use ArrayIterator;
 use Countable;
 use IteratorAggregate;
 use PHPHtmlParser\Exceptions\EmptyCollectionException;
+use ReturnTypeWillChange;
 
 use function call_user_func_array;
 use function count;
@@ -133,6 +134,7 @@ class Collection implements ArrayAccess, Countable, IteratorAggregate
      *
      * @param  mixed  $offset
      */
+    #[ReturnTypeWillChange]
     public function offsetGet($offset): mixed
     {
         return $this->collection[$offset] ?? null;
